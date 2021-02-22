@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mộc Thảo Spa - Danh sách đóng góp ý kiến khác hàng</title>
+    <link rel="icon" href="{{url_for('static', filename='images/logo.jpg')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/font-awesome.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/buttons.bootstrap4.min.css')}}">
+    <style>
+        .pagination {
+            float: right;
+        }
+        .dataTables_filter {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body table-responsive">
+                    <table id="example1" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Khách hàng</th>
+                            <th>SĐT</th>
+                            <th>Góp ý</th>
+                            <th style="min-width: 140px">Đánh giá</th>
+                            <th>Nhân viên phục vụ</th>
+                            <th>Thời gian</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if comments %}
+                        {% for comment in comments %}
+                        <tr>
+                            <td>{{ comment.customer }}</td>
+                            <td>{{ comment.phone }}</td>
+                            <td>{{ comment.comment }}</td>
+                            <td>
+                                {% for fb in comment.feed_back %}
+                                    <i style="color: red; font-size: 20px" class="fa fa-star"></i>
+                                {% endfor %}
+                            </td>
+                            <td>{{ comment.staff }}</td>
+                            <td>{{ comment.created_at }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endif%}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/jszip.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/buttons.html5.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/buttons.print.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/buttons.colVis.min.js')}}"></script>
+
+<script>
+    $(function () {
+        $("table").DataTable({
+          "responsive": true, "lengthChange": false, "autoWidth": false,
+          "buttons": ["copy", "csv", "excel", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+
+</script>
+</body>
+</html>

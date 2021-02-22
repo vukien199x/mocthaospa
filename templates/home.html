@@ -1,0 +1,130 @@
+{% extends "commons/layout.html" %}
+
+{% block content %}
+    <div class="limiter">
+        <div class="container-login100 p-3"
+             style="background-image: url('{{ url_for('static', filename='images/bg-love.jpg') }}'); height: 700px">
+            <div class="wrap-login100" style="overflow-y: auto;" >
+                <form id="comment-form" action="/comment" method="post">
+                    <div class="row justify-content-center">
+                        <div class="col-md-5 col-10 pt-5">
+                            <div class="card">
+                                <div class="card-header">Góp ý của khách hàng</div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="staff">Nhân viên phục vụ hôm nay:</label>
+                                        <select id="staff" class="form-control">
+                                            <option value="Huệ">Huệ</option>
+                                            <option value="Kim Anh">Kim Anh</option>
+                                            <option value="A">A</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customer"> Họ tên khách hàng (*):</label>
+                                        <input id="customer" name="customer" class="form-control border-info" type="text">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="phone"> Số điện thoại (*):</label>
+                                        <input id="phone" name="phone" class="form-control border-info" type="text">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="comment"> Góp ý:</label>
+                                        <textarea id="comment" class="form-control border-info" rows="5"></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="feed-back"> Đánh giá mức độ phục vụ:</label>
+                                        <div id="feed-back" class="rating" data-rate-value=3
+                                             style="font-size: 50px; color: red"></div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-info">Gửi nhận xét</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block ext_scrtip %}
+    <script>
+        $(document).ready(function () {
+            let options = {
+                max_value: 5,
+                step_size: 1,
+            }
+            $(".rating").rate(options)
+
+            $('#comment-form').validate({
+                rules: {
+                    'customer': {
+                        required: true
+                    },
+                    'phone': {
+                        required: true
+                    }
+                },
+                messages: {
+                    'customer': {
+                        required: "Vui lòng nhập tên khách hàng"
+                    },
+                    'phone': {
+                        required: "Vui lòng nhập số điện thoại",
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error)
+                },
+                highlight: function (element) {
+                    $(element).addClass('is-invalid')
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass('is-invalid')
+                }
+            });
+
+            $('button[type="submit"]').on('click', function (e) {
+                if ($('#comment-form').valid()) {
+                    e.preventDefault()
+                    let staff = $('#staff').val()
+                    let customer = $('#customer').val()
+                    let phone = $('#phone').val()
+                    let comment = $('#comment').val()
+                    let feed_back = $(".rating").rate("getValue")
+                    let params = {
+                        staff: staff,
+                        customer: customer,
+                        phone: phone,
+                        comment: comment,
+                        feed_back: feed_back
+                    }
+                    $.ajax({
+                        url: '/comment',
+                        type: 'post',
+                        data: JSON.stringify(params),
+                        contentType: "application/json;charset=UTF-8",
+                        processData: false,
+                        beforeSend: function (xhr, settings) {
+                            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}")
+                            }
+                        },
+                        success: function (res) {
+                            swal("Gửi đánh giá thành công!", "Cảm ơn quý khách đã luôn ủng hộ Môc Thảo Spa", "success");
+                        },
+                        error: function (error) {
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

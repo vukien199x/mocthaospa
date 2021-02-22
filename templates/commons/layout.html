@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+    {% include 'commons/head.html' %}
+    <title> Mộc Thảo Spa - {% block title %}{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap-rating.css')}}">
+    <link rel="icon" href="{{url_for('static', filename='images/logo.jpg')}}">
+    <style type="text/css">
+        button.swal-button--confirm {
+            justify-content: center;
+        }
+    </style>
+{% endblock %}
+<body>
+    {% block content %} {% endblock %}
+</body>
+
+{% block scriptlib %}
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-rating.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.validate.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/rater.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/sweetalert.min.js')}}"></script>
+{% endblock %}
+{% block ext_scrtip %} {% endblock %}
+</html>
